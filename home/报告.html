@@ -1,0 +1,232 @@
+<!--
+title: 鑫诺报告规范
+description: 
+published: true
+date: 2021-12-29T02:18:54.012Z
+tags: 
+editor: ckeditor
+dateCreated: 2021-09-01T05:42:59.486Z
+-->
+
+<p><a href="/报告">/报告</a></p>
+<h1>测评规范</h1>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;今天上午跟鑫诺针对8.12联盟视频培训会议后，鑫诺改动要求如下：<br>&nbsp;</p>
+<p>1、数据资源部分：只有当业务数据（视频数据）、个人重要数据、大数据才会单独列为测评对象，鉴别数据和配置数据只需在设备自身测评项中测评即可；详见附件1</p>
+<figure class="image"><img src="/数据资源测评对象选择要求（鑫诺）.png" alt=""></figure>
+<p>2、纯APP软件的项目可以不用移动互联扩展，涉及有手持终端才用移动互联扩展。</p>
+<p>3、漏洞扫描，渗透测试发现的问题，无法归类到具体测评项的，须在3.13.2表中体现（写明安全问题和测评对象即可，后面的内容“/”表示）；</p>
+<p>4、3.13.1章节中如果整个控制点都未不适用的（快测导出来是符合、不符合、部分符合都为空的），需在符合、不符合、部分符合写上“N/A”；</p>
+<p>5、联盟要求审计数据在安全管理中心的集中管控中提现，但此条鑫诺不按照执行。</p>
+<p>6、本地备份和异地备份放在数据资源测评中核查。</p>
+<h1>问题答疑</h1>
+<figure class="table" style="width:806pt;">
+  <table>
+    <tbody>
+      <tr>
+        <td style="height:13.8pt;width:248pt;">问题</td>
+        <td style="border-left:none;width:338pt;">解答</td>
+        <td style="width:220pt;">&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:55.2pt;width:248pt;">安全计算环境中入侵防范控制点对入侵行为的检测</td>
+        <td style="border-left:none;border-top:none;width:338pt;">达不到要求，判定不符合，写修正时，要写切实有效的措施，不能随便拿一个措施就来修正，如安全区域边界的边界防护未作准入措施通过物理访问控制进行修正，物理机房无法非法进入，交换机等设备端口进行管控，具有安管平台等</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:248pt;">安全区域边界测评可以整体核查，还是单独测评</td>
+        <td style="border-left:none;border-top:none;width:338pt;">除了安全访问控制，其他都可以整体测评</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:248pt;">安全管理中心只有三级有涉及审计数据的管理，二级系统没有对应测评项</td>
+        <td style="border-left:none;border-top:none;width:338pt;">二级系统不体现就行</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:41.4pt;width:248pt;">资产风险等级为一般的是否可判为低危</td>
+        <td style="border-left:none;border-top:none;width:338pt;">不能直接判定，要按系统具体情况判定，有些特殊情况可判定中危等。</td>
+        <td style="width:220pt;">风险判定可按（关键、重要、一般）来对应判定高危、中危、低危，但高风险还是要先按高风险判例先行进行判定</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:41.4pt;width:248pt;">数据资源</td>
+        <td style="border-left:none;border-top:none;width:338pt;">设备的鉴别数据，配置数据在设备自身测评项中测评，针对应用系统的重要业务数据、个人重要数据，大数据单独列为测评对象<br>各项数据分别测评表体现</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:248pt;">数据备份</td>
+        <td style="border-left:none;border-top:none;width:338pt;">数据资源无需单独测，系统整体测评就行（关注业务数据、个人数据），特定行业设备配置数据需备份</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:248pt;">审计数据测评关联安全管理中心哪项</td>
+        <td style="border-left:none;border-top:none;width:338pt;">关联安全管理中心的集中管控</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:248pt;">存在系统定制开发的系统，所部署的服务器是否需要测评</td>
+        <td style="border-left:none;border-top:none;width:338pt;">需要进行测评，按照正常指标来测，但在总体分析里需要进行问题分析</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:248pt;">安全管理中心-测评项判定是否有集中管控设备才能判定符合</td>
+        <td style="border-left:none;border-top:none;width:338pt;">针对系统管理，审计管理，安全管理无需有集中管控设备才判符合</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:248pt;">数据保密性，传输和存储保密性，两项测评，存储多了对配置数据 的要求，是否需要测评</td>
+        <td style="border-left:none;border-top:none;width:338pt;">需要测评，网络设备很多都有自带的加密算法</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:248pt;">关于管理制度中关于密码的三条测评项如何判定</td>
+        <td style="border-left:none;border-top:none;width:338pt;">采用的密码技术和产品需通过国家相关机构认证，取得证书判定符合，采用国际算法也需通过国家相关机构认证，才能才能判定符合</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:248pt;">安全管理中心系统管理、审计管理、安全管理测评</td>
+        <td style="border-left:none;border-top:none;width:338pt;">针对安全管理中心需要进行三权分离判定（堡垒机、审计系统等设备）</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:248pt;">双因素认证</td>
+        <td style="border-left:none;border-top:none;width:338pt;">网络、安全设备支撑radius协议，支持动态令牌，Linux系统自带pam组件</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:248pt;">　</td>
+        <td style="border-left:none;border-top:none;width:338pt;">实现方式需要端到端，管理终端到堡垒机实现双因素不行</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:248pt;">系统定级与系统是否为高可用有关联嘛</td>
+        <td style="border-left:none;border-top:none;width:338pt;">系统定级与系统高可用性没有必联性，需与系统情况进行分析</td>
+        <td>&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<h1>报告答疑</h1>
+<figure class="table" style="width:703pt;">
+  <table>
+    <tbody>
+      <tr>
+        <td style="height:13.8pt;width:254pt;">问题</td>
+        <td style="border-left:none;width:449pt;">解答</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:254pt;">数据资源表的问题</td>
+        <td style="border-left:none;border-top:none;width:449pt;">填写的主要是应用业务数据、个人敏感信息，大数据，其他配置数据、鉴别数据的等写在设备本身测评纪录中。审计数据放在安全管理中心里体现</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:254pt;">该系统租用云平台IAAS平台，自身构建PAAS平台系统，选云平台还是云租户？</td>
+        <td style="border-left:none;border-top:none;width:449pt;">测评对象为PAAS平台，要选择云平台指标</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">附录B上次测评对象问题整改情况说明</td>
+        <td style="border-left:none;border-top:none;width:449pt;">需体现上次测评报告中，所有的问题，已整改就选择已整改项，如部分整改，选择未整改</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">主要安全问题及整改建议章节</td>
+        <td style="border-left:none;border-top:none;width:449pt;">为了保证前置章节的可读性，不用添加涉及的具体测评对象</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">3.12.1漏洞扫描章节，具体漏洞指向附录E</td>
+        <td style="border-left:none;border-top:none;width:449pt;">需要体现主要安全漏洞问题，不可直接指向附录E</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">附录E漏洞扫描结果记录</td>
+        <td style="border-left:none;border-top:none;width:449pt;">不需体现具体是什么设备</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:254pt;">大数据测评扩展表，大数据平台包含大数据应用、大数据资源是否可全部勾选</td>
+        <td style="border-left:none;border-top:none;width:449pt;">若包含大数据平台、大数据应用、大数据资源三项，可选取全部</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">客户放弃扫描及渗透材料在报告里体现位置</td>
+        <td style="border-left:none;border-top:none;width:449pt;">建议放在正文中，3.12验证测试章节</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:254pt;">系统封面单位名称问题</td>
+        <td style="border-left:none;border-top:none;width:449pt;">报告封面系统单位名称需为系统的责任单位，网络安全等级测评信息表里的单位可为签订具体合同的单位</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">2.3测评对象&nbsp; &nbsp; &nbsp; &nbsp;区域边界，通信网络缺少资产表</td>
+        <td style="border-left:none;border-top:none;width:449pt;">区域边界，通信网络按整体测评分析，不列资产</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:254pt;">4.3整体测评结果汇总章节，表4-1缺少前后风险等级说明</td>
+        <td style="border-left:none;border-top:none;width:449pt;">不判风险等级，只做问题风险变化的说明</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">扩展要求的全局性测评</td>
+        <td style="border-left:none;border-top:none;width:449pt;">云计算作为整体来测评，移动互联、工控、物联网单个设备可以测评，不用作为全局测评</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:254pt;">附录A章节中 对于设备实际数量大于抽取数量的时该如何填写</td>
+        <td style="border-left:none;border-top:none;width:449pt;">选取的测评对象，单独列出，且名称唯一，并与2.3.2章节对应，对于选取测评对象以外的同种设备，可直接列出资产，并在数量中填上剩余的数量。</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">5.安全问题分析</td>
+        <td style="border-left:none;border-top:none;width:449pt;">漏洞扫描，渗透测试发现的问题，无法归类到具体测评项的，须在表中单独体现</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">第5章，第7章，为何不使用问题编号</td>
+        <td style="border-left:none;border-top:none;width:449pt;">使用问题编号，可能会出现，问题不对应的情况，，故现在使用序号来标识</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">附录D安全计算环境</td>
+        <td style="border-left:none;border-top:none;width:449pt;">通用要求与扩展要求表分开填写</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">2.3.2.9与A.9数据资源表格 a.b表问题</td>
+        <td style="border-left:none;border-top:none;width:449pt;">如涉及大数据，可删除a表</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:254pt;">等级测评结论的安全状况描述与总体评价中的描述与结论是否重复</td>
+        <td style="border-left:none;border-top:none;width:449pt;">可以重复描述，因为它们是不同的章节（漏洞级别报告模板现在就定义高危、中危、低危）</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">如漏洞问题很多，</td>
+        <td style="border-left:none;border-top:none;width:449pt;">在3.13章节中列出主要问题，在附录E中列出所有问题</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:13.8pt;width:254pt;">SSL证书算密码产品嘛</td>
+        <td style="border-left:none;border-top:none;width:449pt;">不算</td>
+      </tr>
+      <tr>
+        <td style="border-top:none;height:27.6pt;width:254pt;">单位系统采用私有云架构部署，如何判断是否采用云计算扩展项</td>
+        <td style="border-left:none;border-top:none;width:449pt;">单位系统采用云架构部署，只作为自身使用，但内部未作vpc虚拟化技术使用，可不加云计算扩展。如内部采用虚拟网络划分等，就存在虚拟边界，虚拟防护等，就需加云计算扩展。</td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<h1>知识库之报告中经常存在的错误点</h1>
+<p>例如：</p>
+<ol>
+  <li>访问控制c，抄条款&nbsp;</li>
+  <li>⼊侵防范c，设备仅能通过堡 垒机登录管理，但未限制设备 登录地址范围，前后描述冲突&nbsp;</li>
+  <li>访问控制e中描述由研发部使 ⽤系统管理账户⾓⾊配置访问 控制策略，但在访问控制c中描 述不存在共享账户⾏为&nbsp;</li>
+  <li>安全区域边界-安全审计 d)结 果记录未描述是否对访问互联 ⽹的⽤户⾏为单独进⾏审计分 析&nbsp;</li>
+  <li>边界防护a)未正确理解测评指 标的要求，结果记录未反应物 理端⼝的防护情况&nbsp;</li>
+  <li>IDS⽤途中只写了⼊侵检测， 根据附录34中IDS功能的描 述，还包括恶意代码检测&nbsp;</li>
+  <li>附录结果记录中未体现恶意代 码库的情况，以及能对哪些恶 意代码进⾏检测</li>
+  <li>8错别字，未时间管理⽤户的权 限分离&nbsp;</li>
+  <li>9测评记录描述有问题，“已成 ⽴⽹络安全⼯作的委员会或领 导⼩组”&nbsp;</li>
+  <li>10⼈员配备a)系统管理员张钢 和正⽂21页中⼈员岗位不⼀致&nbsp;</li>
+  <li>11防雷击a)结果记录照抄指标 项&nbsp;</li>
+  <li>12⼊侵防范b）未详细记录关闭 的服务和⾼危端⼝&nbsp;</li>
+  <li>13⾝份鉴别c）结果记录未说明 是否已关闭Telnet、HTTP等⽅ 式</li>
+  <li>电⼒供应a),结果记录描述简 单，未说明UPS品牌型号&nbsp;</li>
+  <li>15⼊侵防范a),结果记录描述简 单，未说明安装组件和应⽤程 序情况&nbsp;</li>
+  <li>16⽹络架构a),结果记录不详 细，未具体说明CPU、内存使 ⽤数据&nbsp;</li>
+  <li>17⼯程实施b),结果记录不准 确，《系统开发安全规范》、 《系统概要设计说明书》不提 供⼯程实施⽅案&nbsp;</li>
+  <li>18⽹络架构d),未描述具体 VLAN数量、名称等内容，不详 实&nbsp;</li>
+  <li>19访问控制b),未描述具体策 略、访问控制规则&nbsp;</li>
+  <li>20⼊侵防范c),未描述具体⽹段 信息&nbsp;</li>
+  <li>21边界防护d），“系统不涉及 ⽆线⽹络使⽤，不适⽤”与P43 “在接⼊点A1内部办公⽹络⽆线 接⼊点”⽭盾&nbsp;</li>
+  <li>22产品采购和使⽤，未描述 SSL设备是否采⽤符合国家密 码管理主管部门的要求&nbsp;</li>
+  <li>23安全审计A条款不详实，没 有记录当前设备的配置情况， 多个安全设备都是⼀样的写法&nbsp;</li>
+  <li>24访问控制C条款,未写当前帐 户情况，直接抄条款（多处）</li>
+  <li>安全设备和交换设备的记录 表基本雷同，未记录设备配置 情况描述</li>
+  <li>&nbsp;</li>
+</ol>

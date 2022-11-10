@@ -1,0 +1,445 @@
+<!--
+title: mysql
+description: 
+published: true
+date: 2021-12-29T02:17:10.380Z
+tags: 
+editor: ckeditor
+dateCreated: 2021-08-11T09:10:45.508Z
+-->
+
+<p>更多信息请参考https://dev.mysql.com/doc/refman/5.7/en/</p>
+<h1>常用命令</h1>
+<h2><strong>1,查看是否运行</strong></h2>
+<pre><code class="language-plaintext">mysql：ps -ef | grep mysql</code></pre>
+<h2>2,本地登录mysql一般使用root登录即可，默认情况下root账户应该是没有密码的：</h2>
+<pre><code class="language-plaintext">mysql -u root -p</code></pre>
+<p>远程登录一般是：mysql -u root -h IP地址 -p</p>
+<h2><strong>3,进入mysql后常用命令：</strong></h2>
+<p>•status;//查看数据库环境信息包括：当前用户、ssl、版本、ip、端口</p>
+<pre><code class="language-plaintext">mysql&gt; status;
+--------------
+mysql  Ver 14.14 Distrib 5.6.51, for Linux (x86_64) using  EditLine wrapper
+
+Connection id:          13362
+Current database:       mysql
+Current user:           root@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server version:         5.6.51 MySQL Community Server (GPL)
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    latin1
+Db     characterset:    latin1
+Client characterset:    utf8
+Conn.  characterset:    utf8
+UNIX socket:            /var/lib/mysql/mysql.sock
+Uptime:                 9 days 13 min 15 sec
+</code></pre>
+<p>//查看当前服务器上存在哪些数据库</p>
+<pre><code class="language-plaintext">show DATABASES; </code></pre>
+<pre><code class="language-plaintext">+--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| riskscanner        |
+| wikijs             |
+| zabbix             |
++--------------------+</code></pre>
+<p>use&nbsp;数据库名称;&nbsp; &nbsp;//选择数据库</p>
+<pre><code class="language-plaintext">mysql&gt; use mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+读取表信息以完成表和列名
+
+您可以关闭此功能，以便使用-a快速启动
+
+数据库已更改</code></pre>
+<p>show TABLES;&nbsp; &nbsp;//查看当前数据库中有哪些表；</p>
+<pre><code class="language-plaintext">mysql&gt; show TABLES;
++---------------------------+
+| Tables_in_mysql           |
++---------------------------+
+| columns_priv              |
+| db                        |
+| slave_relay_log_info      |
+| slave_worker_info         |
+| slow_log                  |
+| tables_priv               |
+| time_zone                 |
+| time_zone_leap_second     |
+| time_zone_name            |
+| time_zone_transition      |
+| time_zone_transition_type |
+| user                      |
++---------------------------+</code></pre>
+<p>describe&nbsp;表名称;&nbsp; //显示表的结构；</p>
+<pre><code class="language-plaintext">mysql&gt; describe user
+    -&gt; ;
++------------------------+-----------------------------------+------+-----+-----------------------+-------+
+| Field                  | Type                              | Null | Key | Default               | Extra |
++------------------------+-----------------------------------+------+-----+-----------------------+-------+
+| Host                   | char(60)                          | NO   | PRI |                       |       |
+| User                   | char(16)                          | NO   | PRI |                       |       |
+
+| ssl_type               | enum('','ANY','X509','SPECIFIED') | NO   |     |                       |       |
+| ssl_cipher             | blob                              | NO   |     | NULL                  |       |
+| x509_issuer            | blob                              | NO   |     | NULL                  |       |
+| x509_subject           | blob                              | NO   |     | NULL                  |       |
+| max_questions          | int(11) unsigned                  | NO   |     | 0                     |       |
+| max_updates            | int(11) unsigned                  | NO   |     | 0                     |       |
+| max_connections        | int(11) unsigned                  | NO   |     | 0                     |       |
+| max_user_connections   | int(11) unsigned                  | NO   |     | 0                     |       |
+| plugin                 | char(64)                          | YES  |     | mysql_native_password |       |
+| authentication_string  | text                              | YES  |     | NULL                  |       |
+| password_expired       | enum('N','Y')                     | NO   |     | N                     |       |
++------------------------+-----------------------------------+------+-----+-----------------------+-------+
+43 rows in set (0.00 sec)</code></pre>
+<p>select&nbsp;列名 from&nbsp;表名 where&nbsp;列名 = “值”;</p>
+<h2><strong>4，查看数据库管理用户</strong></h2>
+<p>use mysql;&nbsp; //进入mysql数据库；</p>
+<p>show tables;&nbsp;//查看数据库下存在的表名；</p>
+<p>select Host,User,Password from user;&nbsp; &nbsp;//查看数据库用户账户</p>
+<pre><code class="language-plaintext">mysql&gt; select Host,User,Password from user;&nbsp;
++------------+------------+-------------------------------------------+
+| Host       | User       | Password                                  |
++------------+------------+-------------------------------------------+
+| localhost  | root       |                                           |
+| openfalcon | root       |                                           |
+| 127.0.0.1  | root       |                                           |
+| ::1        | root       |                                           |
+| localhost  |            |                                           |
+| openfalcon |            |                                           |
+| %          | zabbix     | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 |
+| localhost  | zabbix     | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 |
+| %          | wiki       | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 |
+| localhost  | wiki       | *6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 |
+| localhost  | confluence | *387D448A0185EA5AF863406C94F24F9A8C4F9117 |
+| %          | confluence | *387D448A0185EA5AF863406C94F24F9A8C4F9117 |
++------------+------------+-------------------------------------------+
+12 rows in set (0.00 sec)</code></pre>
+<p>在 MySQL 4.1.1&nbsp;中，对密码哈希方法进行了修改，sha256_password</p>
+<p>以产生更长的 41 散装值：</p>
+<p>mysql&gt; SELECT&nbsp;PASSWORD('mypass');<br>+-------------------------------------------+<br>| PASSWORD('mypass')&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br>+-------------------------------------------+<br>| *6C8989366EAF75BB670AD8EA7A7FC1176A95CEF4&nbsp;|<br>+-------------------------------------------+</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>MySQL 5.7版本实例支持通过validate_password插件修改数据库账号的密码复杂度校验规则：</p>
+<ul>
+  <li>是否允许密码和账号名一致。</li>
+  <li>密码的长度。</li>
+  <li>密码中需包含的大小写字母个数。</li>
+  <li>密码中需包含的数字个数。</li>
+  <li>密码中需包含的特殊字符个数。</li>
+  <li>密码检测强度。</li>
+</ul>
+<p>&nbsp;</p>
+<p>来自 &lt;<a href="https://help.aliyun.com/document_detail/207872.html?spm=a2c4g.11186623.6.837.4e875a78z4uv3m">https://help.aliyun.com/document_detail/207872.html?spm=a2c4g.11186623.6.837.4e875a78z4uv3m</a>&gt;&nbsp;</p>
+<p>&nbsp;</p>
+<figure class="image"><img src="data:image/png;base64,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" alt="返回结果"></figure>
+<figure class="table">
+  <table style="border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;">
+    <tbody>
+      <tr>
+        <td style="background-color:#F2F2F2;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:1.7861in;"><strong>参数名</strong></td>
+        <td style="background-color:#F2F2F2;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:4.7229in;"><strong>说明</strong></td>
+      </tr>
+      <tr>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:1.8055in;"><strong>loose_validate_password_check_user_name</strong></td>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:4.7041in;">
+          <ul>
+            <li><strong>ON</strong>：允许。</li>
+            <li><strong>OFF</strong>：不允许。</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:1.8027in;"><strong>validate_password_policy</strong></td>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:4.7458in;">
+          <ul>
+            <li><strong>0</strong>：强度低，只检测密码长度。</li>
+            <li><strong>1</strong>：强度中，检测密码的长度、数字、大小写以及特殊字符。</li>
+            <li><strong>2</strong>：强度高，检测密码的长度、数字、大小写、特殊字符以及字典文件。<br><strong>说明</strong>&nbsp;由于当前暂不支持指定字典文件。因此<strong>1</strong>和<strong>2</strong>的强度相等。</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:1.8055in;"><strong>validate_password_length</strong></td>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:4.7041in;">
+          <p>密码长度。取值：<strong>0~256</strong>。</p>
+          <p>默认值：<strong>8</strong>。</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:1.7979in;"><strong>validate_password_number_count</strong></td>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:4.7118in;">
+          <p>密码中需包含的数字的个数。取值：<strong>0~256</strong>。</p>
+          <p>默认值：<strong>1</strong>。</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:1.8055in;"><strong>validate_password_mixed_case_count</strong></td>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:4.7041in;">
+          <p>密码中需包含的大小写字母的个数。取值：<strong>0~256</strong>。</p>
+          <p>默认值：<strong>1</strong>。</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:1.8055in;"><strong>validate_password_special_char_count</strong></td>
+        <td style="background-color:white;border-bottom:1pt solid #A3A3A3;border-left:1pt solid #A3A3A3;border-right:1pt solid #A3A3A3;border-top:1pt solid #A3A3A3;padding:4pt;vertical-align:top;width:4.7041in;">
+          <p>密码中需包含的特殊字符的个数。取值：<strong>0~256</strong>。</p>
+          <p>默认值：<strong>1</strong>。</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+<p>&nbsp;</p>
+<p>来自 &lt;<a href="https://help.aliyun.com/document_detail/207872.html?spm=a2c4g.11186623.6.837.4e875a78z4uv3m">https://help.aliyun.com/document_detail/207872.html?spm=a2c4g.11186623.6.837.4e875a78z4uv3m</a>&gt;&nbsp;</p>
+<p>&nbsp;</p>
+<p>mysql&gt; SHOW VARIABLES LIKE 'validate_password%';</p>
+<p>+--------------------------------------+--------+</p>
+<p>| Variable_name&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Value&nbsp; |</p>
+<p>+--------------------------------------+--------+</p>
+<p>| validate_password_check_user_name&nbsp; &nbsp; | OFF&nbsp; &nbsp; |</p>
+<p>| validate_password_dictionary_file&nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| validate_password_length&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 8&nbsp; &nbsp; &nbsp; |</p>
+<p>| validate_password_mixed_case_count&nbsp; &nbsp;| 1&nbsp; &nbsp; &nbsp; |</p>
+<p>| validate_password_number_count&nbsp; &nbsp; &nbsp; &nbsp;| 1&nbsp; &nbsp; &nbsp; |</p>
+<p>| validate_password_policy&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| MEDIUM |</p>
+<p>| validate_password_special_char_count | 1&nbsp; &nbsp; &nbsp;|</p>
+<p>+--------------------------------------+--------+</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><strong>5，关于用户远程登录</strong></h2>
+<p>&nbsp; 1，意思就是说，用户拥有对该库的一些权限，并可以从某远程IP连接过来：</p>
+<p>GRANT ALL ON dbname.* TO abc@192.168.1.10 IDENTIFIED BY “123456”</p>
+<p>授权abc用户对dbname数据库拥有（ALL）权限，允许用户从192.168.1.10机器上用密码123456登录。</p>
+<p>可以用以下语句来查看授权信息</p>
+<p>USE mysql;</p>
+<p>SELECT host,user,password FROM user;&nbsp; //如果已经有授权，可以用更新表的方法来进行修改。</p>
+<figure class="image"><img src="data:image/png;base64,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" alt="mysql> select user, host from mysql . user; 
+user 
+I host 
+mysql . session I localhost I 
+mysql . sys 
+root 
+I localhost I 
+I local host I 
+3 
+rows in set (0.04 csdn. net/qq_37996815 "></figure>
+<p>&nbsp;</p>
+<p>UPDARE USER SET host=’%’&nbsp; WHERE user=’abc’;&nbsp; //这里是授权成，abc用户可以成任意主机登录数据库</p>
+<p>&nbsp; 2，修改mysql配置文件 my.cnf使其监听本机实际的ip</p>
+<p>即：在[mysqld]段修改</p>
+<p>Bind-address=192.168.1.10</p>
+<p>重新启动mysql,用netstat –tulnp |grep 3306可以查看，主机监听的地址已经改变了。</p>
+<p>如果没有监听对应的ip，用mysql –h主机ip –uabc –p123456这样的形式，登录会提示失败。-h后的主机ip必须在监听的范围内</p>
+<p>注意：在数据库中修改了关于权限方面的东西必须执行flush privileges命令才能使修改起效。</p>
+<p>&nbsp;</p>
+<p><strong>关于用户账号权限查询</strong></p>
+<p>mysql&gt; show grants for username@localhost;&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 权限&nbsp; &nbsp; &nbsp; &nbsp;账号&nbsp; &nbsp; &nbsp; &nbsp;数据库</p>
+<p>+---------------------------------------------------------------------+</p>
+<p>| Grants for root@localhost |</p>
+<p>+---------------------------------------------------------------------+</p>
+<p>| GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION |</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;所有权限</p>
+<p>+---------------------------------------------------------------------+</p>
+<p><strong>关于默认账户</strong></p>
+<p>MySQL 安装过程的一部分是数据目录初始化（见<a href="https://dev.mysql.com/doc/refman/5.7/en/data-directory-initialization.html">第 2.10.1 节"初始化数据目录"）。</a>在数据目录初始化期间，MySQL 创建应被视为保留的用户帐户：</p>
+<ul>
+  <li>'root'@'localhost：用于管理目的。此帐户具有所有特权，可以执行任何操作。<br>严格地说，此帐户名称不保留，因为某些安装将帐户重命名为其他内容，以避免以知名名称暴露高度特权的帐户。root</li>
+  <li>'mysql.sys'@'localhost'：用作<a href="https://dev.mysql.com/doc/refman/5.7/en/sys-schema.html">sys</a>样图对象。使用帐户可避免 DBA&nbsp;重命名或删除帐户时出现的问题。此帐户已锁定，因此不能用于客户端连接。DEFINERmysql.sysroot</li>
+  <li>'mysql.session'@'localhost'：内部使用插件访问服务器。此帐户已锁定，因此不能用于客户端连接。</li>
+</ul>
+<p>&nbsp;</p>
+<p>来自 &lt;<a href="https://dev.mysql.com/doc/refman/5.7/en/reserved-accounts.html">https://dev.mysql.com/doc/refman/5.7/en/reserved-accounts.html</a>&gt;&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2><strong>6，关于登录失败、登录用户数等限制</strong></h2>
+<p>show global variables like 'max%';&nbsp; &nbsp;//意思是查看全局参数中类似于maxXXX的参数</p>
+<p>如下参考：</p>
+<p>mysql&gt; show global variables like 'max%';</p>
+<p>show global variables like '%time%';+----------------------------+----------------------+</p>
+<p>| Variable_name&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Value&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>+----------------------------+----------------------+</p>
+<p>| max_allowed_packet&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 1073741824&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_binlog_cache_size&nbsp; &nbsp; &nbsp; | 18446744073709547520 |</p>
+<p>| max_binlog_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1073741824&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_binlog_stmt_cache_size | 18446744073709547520 |</p>
+<p>| max_connect_errors&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 6000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; 登录失败几次后block远程登录</p>
+<p>| max_connections&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 1000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp;最大连接数</p>
+<p>| max_delayed_threads&nbsp; &nbsp; &nbsp; &nbsp; | 20&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_digest_length&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1024&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_error_count&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 64&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_execution_time&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_heap_table_size&nbsp; &nbsp; &nbsp; &nbsp; | 8388608&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_insert_delayed_threads | 20&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_join_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 18446744073709551615 |</p>
+<p>| max_length_for_sort_data&nbsp; &nbsp;| 1024&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_points_in_geometry&nbsp; &nbsp; &nbsp;| 65536&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_prepared_stmt_count&nbsp; &nbsp; | 16382&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_relay_log_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_seeks_for_key&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 18446744073709551615 |</p>
+<p>| max_sort_length&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1024&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_sp_recursion_depth&nbsp; &nbsp; &nbsp;| 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_tmp_tables&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 32&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_user_connections&nbsp; &nbsp; &nbsp; | 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; 响应的连接数</p>
+<p>| max_write_lock_count&nbsp; &nbsp; &nbsp; &nbsp;| 18446744073709551615 |</p>
+<p>+----------------------------+----------------------+</p>
+<p>23 rows in set (0.00 sec)</p>
+<p>&nbsp;</p>
+<p>//其中max_connect_errors的值表示登录失败几次后block远程登录，当block后，必须使用mysqladmin flush-hosts命令才能解除</p>
+<p>//max_user_connections为最大用户连接数限制</p>
+<p>&nbsp;</p>
+<p>show global variables like '%time%';</p>
+<p>查询如下参考：</p>
+<p>MySQL&gt; show global variables like '%time%';</p>
+<p>+---------------------------------+-------------------+</p>
+<p>| Variable_name&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Value&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>+---------------------------------+-------------------+</p>
+<p>| binlog_max_flush_queue_time&nbsp; &nbsp; | 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| connect_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| datetime_format&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | %Y-%m-%d %H:%i:%s |</p>
+<p>| default_password_lifetime&nbsp; &nbsp; &nbsp; | 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| delayed_insert_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 300&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| explicit_defaults_for_timestamp | ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| flush_time&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| have_statement_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| YES&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_flush_log_at_timeout&nbsp; &nbsp; | 1&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_lock_wait_timeout&nbsp; &nbsp; &nbsp; &nbsp;| 120&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_old_blocks_time&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 1000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| innodb_rollback_on_timeout&nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| interactive_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 28800&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; 服务器等待非活跃连接的时间&nbsp;（根据客户端类型不同）</p>
+<p>| lc_time_names&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | en_US&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| lock_wait_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 31536000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |&nbsp;）&nbsp; 锁定时间&nbsp;秒</p>
+<p>| log_timestamps&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| SYSTEM&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| long_query_time&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1.000000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_execution_time&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| net_read_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 30&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| net_write_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 60&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |&nbsp; 等待将一个block发送给客户端的超时时间。</p>
+<p>| rpl_stop_slave_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 31536000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| slave_net_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 60&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| slow_launch_time&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 2&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| system_time_zone&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| CST&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| time_format&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | %H:%i:%s&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| time_zone&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | SYSTEM&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| wait_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 28800&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; 服务器等待非活跃连接的时间（根据客户端类型不同</p>
+<p>+---------------------------------+-------------------+</p>
+<p>&nbsp;</p>
+<p>//其中wait_timeout表示服务器等待非活跃连接的时间，当达到时间时服务器关闭该连接；</p>
+<p>//根据客户端类型不同，非活跃时间受wait_timeout和interactive_timeout的影响；</p>
+<h2><strong>7，mysql不能创建同名用户，由host、user主键唯一确定</strong></h2>
+<p><strong>8，远程连接加密</strong></p>
+<p>show global variables like '%ssl%';</p>
+<p>查询如下参考：</p>
+<p>mysql&gt; show global variables like '%ssl%';</p>
+<p>+---------------+----------+</p>
+<p>| Variable_name | Value&nbsp; &nbsp; |</p>
+<p>+---------------+----------+</p>
+<p>| have_openssl&nbsp; | DISABLED |&nbsp; &nbsp;//查看have_openssl和have_ssl是否为可用</p>
+<p>| have_ssl&nbsp; &nbsp; &nbsp; | DISABLED |</p>
+<p>| ssl_ca&nbsp; &nbsp; &nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| ssl_capath&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| ssl_cert&nbsp; &nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| ssl_cipher&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| ssl_crl&nbsp; &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| ssl_crlpath&nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| ssl_key&nbsp; &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>+---------------+----------+</p>
+<p>&nbsp;</p>
+<p>//查看have_openssl和have_ssl是否为可用，如为可用表明mysql支持openssl或yaSSL协议加密客户端到服务器的连接，</p>
+<p>//该选项配置需在编译mysql时进行配置；具体实现过程参考http://www.kuqin.com/article/17mysql/686612.html</p>
+<h2><strong>9，关于日志</strong></h2>
+<p>show global variables（查看MySQL服务器运行的各种状态值） like '%log%'；</p>
+<p>查询如下参考：</p>
+<p>mysql&gt; show global variables like '%log%';</p>
+<p>+--------------------------------------------+--------------------------------------+</p>
+<p>| Variable_name&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Value&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>+--------------------------------------------+--------------------------------------+</p>
+<p>| back_log&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 300&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_cache_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 1048576&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_checksum&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| CRC32&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_direct_non_transactional_updates&nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_error_action&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ABORT_SERVER&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| binlog_format&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | MIXED&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |&nbsp; 二进制日志格式&nbsp;</p>
+<p>| binlog_group_commit_sync_delay&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_group_commit_sync_no_delay_count&nbsp; &nbsp;| 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_gtid_simple_recovery&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| binlog_max_flush_queue_time&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_order_commits&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| binlog_row_image&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | FULL&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| binlog_rows_query_log_events&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_stmt_cache_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 32768&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| binlog_transaction_dependency_history_size | 25000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| binlog_transaction_dependency_tracking&nbsp; &nbsp; | COMMIT_ORDER&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| expire_logs_days&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 30&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| general_log&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| general_log_file&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | /home/data/mysql/api.log&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| innodb_api_enable_binlog&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_flush_log_at_timeout&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 1&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_flush_log_at_trx_commit&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 2&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_locks_unsafe_for_binlog&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_log_buffer_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 2097152&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_log_checksums&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| innodb_log_compressed_pages&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| innodb_log_file_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 33554432&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| innodb_log_files_in_group&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 3&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_log_group_home_dir&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ./&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| innodb_log_write_ahead_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 8192&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| innodb_max_undo_log_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1073741824&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| innodb_online_alter_log_max_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 134217728&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_undo_log_truncate&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| innodb_undo_logs&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 128&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_bin&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| log_bin_basename&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | /home/data/mysql/mysql-bin&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| log_bin_index&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| /home/data/mysql/mysql-bin.index&nbsp; &nbsp; |</p>
+<p>| log_bin_trust_function_creators&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_bin_use_v1_row_events&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_builtin_as_identified_by_password&nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_error&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| /home/data/mysql/mysql-error.log&nbsp; &nbsp; |</p>
+<p>| log_error_verbosity&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 3&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_output&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | FILE&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| log_queries_not_using_indexes&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_slave_updates&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_slow_admin_statements&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_slow_slave_statements&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_statements_unsafe_for_binlog&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| log_syslog&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_syslog_facility&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| daemon&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| log_syslog_include_pid&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| log_syslog_tag&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_throttle_queries_not_using_indexes&nbsp; &nbsp; | 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| log_timestamps&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | SYSTEM&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| log_warnings&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 2&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| max_binlog_cache_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 18446744073709547520&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_binlog_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 1073741824&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_binlog_stmt_cache_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 18446744073709547520&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| max_relay_log_size&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| relay_log&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| relay_log_basename&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | /home/data/mysql/api-relay-bin&nbsp; &nbsp; &nbsp; |</p>
+<p>| relay_log_index&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| /home/data/mysql/api-relay-bin.index |</p>
+<p>| relay_log_info_file&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| relay-log.info&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| relay_log_info_repository&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| FILE&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| relay_log_purge&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| relay_log_recovery&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| relay_log_space_limit&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 0&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| slow_query_log&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | ON&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |</p>
+<p>| slow_query_log_file&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| /home/data/mysql/mysql-slow.log&nbsp; &nbsp; &nbsp;|</p>
+<p>| sql_log_off&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| OFF&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| sync_binlog&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 1&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| sync_relay_log&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>| sync_relay_log_info&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 10000&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|</p>
+<p>+--------------------------------------------+--------------------------------------+</p>
+<p>&nbsp;</p>
+<p>//查看日志配置相关的参数，也可查看my.cnf或my.ini文件中关于日志的配置，在测评中只要配置了日志相关就给符合。</p>
+<p>//一般有错误日志、SQL执行日志、更新日志、二进制日志、超时日志、ISAM操作日志、慢查询日志等（并不一定都有），默认一般未开启。</p>
+<p>//详细解释参考http://wenku.baidu.com/link?url=mSR_Mh5DkeZ14xhP-Z10DSxhodHHu2TWA_3MYy1CxP5wrxsQE2W-xikC0D_cUVQRbfKpyOUGhNaA2epO3uDrW_aUKZEdRF8Mm5XVtdkaUYS</p>

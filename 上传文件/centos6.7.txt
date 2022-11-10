@@ -1,0 +1,231 @@
+﻿#!/bin/bash
+#该脚本编码字符集为UTF-8
+
+#该脚本测试环境仅为CentOS6.7,在最小化安装操作系统后运行该脚本将产生以下错误：
+	#ls: cannot access /etc/xinetd.conf: No such file or directory  由于没有该文件产生的错误
+	#getfacl: Removing leading '/' from absolute path names 该错误不影响命令结果正常输出
+#该脚本更新的命令如下： 
+# 1.更新了查看操作系统发行版本的命令
+#	cat /etc/*-release 该命令将查看所有与/etc/*-release相匹配的所有文件的内容
+# 2.更新了查看日志命令
+#	tail -n 100 /var/log/secure 更新为 head -n 50 `ls /var/log/secure* | head -2`
+#	tail -n 100 /var/log/messages 更新为 head -n 50 `ls /var/log/messages* | head -2`
+#	运行后将查看名字secure或者secure*名字相匹配的日志的头50行，例如：查看secure文件头50行和secure-20190316文件的头50行
+# 3.增加了查看补丁软件包的命令
+#	rpm -qi patch  该命令将查看patch软件包的详细信息
+# 4.更新了脚本产生的文件名，该脚本产生的文件将以“‘主机名’_resultFile”命名
+#
+
+#resultFile=`hostname`_resultFile 
+#生成文件以主机命名其文件格式 如：localhost_resultFIle
+resultFile=`cat /etc/sysconfig/network-scripts/ifcfg-* | grep IPADDR | grep -v 127.0.0.1 |awk -F= '{printf "%s,",$2}'`_resultFile
+#生成文件以ip命名，如：10.0.0.5;127.0.0.1;_resultFile
+
+echo "============================linux========================" >> $resultFile
+echo -e "\n" >> $resultFiles
+
+echo "command:hostname" >> $resultFile
+hostname >> $resultFile
+echo "*****************查看主机名***************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:ifconfig -a" >> $resultFile
+ifconfig -a >> $resultFile
+echo "*****************查看网卡信息**************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:uname -a" >> $resultFile
+uname -a >> $resultFile
+echo "*******************查看内核*************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command：cat /etc/*-release" >> $resultFile
+cat /etc/*-release  >> $resultFile
+echo "*****************查看系统发行版本及相关信息**************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e  "file: /etc/passwd " >> $resultFile
+awk -F: '($2 == "") {print $1}' /etc/passwd >> $resultFile
+echo "*****************查看密码为空的用户************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e  "file: /etc/shadow " >> $resultFile
+awk -F: '($3 == "0") {print $1}' /etc/passwd >> $resultFile
+echo "******************检查UID为0***************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e  "file: /etc/passwd " >> $resultFile
+cat /etc/passwd >> $resultFile
+echo "******************查看用户文件*************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+
+echo -e "file: /etc/shadow " >> $resultFile
+cat /etc/shadow >>$resultFile
+echo "*****************查看密码文件*************************" >> $resultFile
+echo -e "\n\n" >>$resultFile
+
+echo -e "file: /etc/login.defs " >> $resultFile
+cat /etc/login.defs | grep -v '^#' >> $resultFile
+echo "*****************查看口令配置信息********************************" >> $resultFile
+echo -e "\n\n" >>$resultFile
+
+echo -e "file: /etc/rsyslog.conf" >> $resultFile
+cat /etc/rsyslog.conf >> $resultFile
+echo "*****************查看rsyslog配置信息********************************" >> $resultFile
+echo -e "\n\n" >>$resultFile
+
+echo -e "file: /etc/pam.d/system-auth " >> $resultFile
+grep -v '^#' /etc/pam.d/system-auth  >> $resultFile
+echo "******************查看连接超时**************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e "permisson: /etc/passwd " >> $resultFile
+ls -l /etc/passwd  >> $resultFile
+echo "******************查看用户文件权限***********************" >> $resultFile
+echo -e "\n" >> $resultFile
+
+echo -e "permisson: /etc/shadow" >> $resultFile
+ls -l /etc/shadow >> $resultFile
+echo "******************查看密码文件权限***********************" >> $resultFile
+echo -e "\n" >> $resultFile
+
+echo -e "permisson: /etc/rc3.d" >> $resultFile
+ls -l /etc/rc.d/rc3.d/ >> $resultFile #CentOS6.7版本存在两个rc3.d目录 /etc/rc3.d/ 和/etc/rc.d/rc3.d
+echo "******************查看rc3.d文件权限***********************" >> $resultFile
+echo -e "\n" >> $resultFile
+
+echo -e "permisson: /etc/profile" >> $resultFile
+ls -l /etc/profile  >> $resultFile 
+echo "******************查看profile文件权限***********************" >> $resultFile
+echo -e "\n" >> $resultFile
+
+echo -e "permisson: /etc/xinetd.conf" >> $resultFile
+ls -l /etc/xinetd.conf >> $resultFile
+echo "******************查看xinetd.conf文件权限***********************" >> $resultFile
+echo -e "\n" >> $resultFile
+
+echo -e "permisson: /var/log/audit/audit.log" >> $resultFile
+ls -l /var/log/audit/audit.log >> $resultFile
+echo "******************查看audit.log文件权限***********************" >> $resultFile
+echo -e "\n" >> $resultFile
+
+echo -e "file: /etc/profile" >> $resultFile
+grep -v '^#' /etc/profile  >> $resultFile
+echo "******************查看profile文件内容***********************" >> $resultFile
+echo -e "\n" >> $resultFile
+
+
+echo  -e "command: /var/log/audit/audit.log" >> $resultFile
+getfacl  /var/log/audit/audit.log >> $resultFile
+echo "*************************************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:service syslog status" >> $resultFile
+service rsyslog status >> $resultFile
+systemctl status rsyslog >> $resultFile
+echo "******************查看日志服务运行状态*****************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:service auditd status" >> $resultFile
+
+service auditd status >> $resultFile
+systemctl status auditd  >> $resultFile
+echo "******************查看审计服务运行状态*****************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:chkconfig --list" >> $resultFile
+chkconfig --list >> $resultFile
+echo "******************查看服务运行级别*****************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:service --status-all |grep running" >> $resultFile
+service --status-all | grep running >> $resultFile
+echo "*****************查看系统正在运行的服务**************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e "file: /etc/hosts.allow" >> $resultFile
+sed '/^#/d' /etc/hosts.allow >> $resultFile
+echo "******************查看主机开放列表*****************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e "file: /etc/hosts.deny" >> $resultFile
+sed '/^#/d' /etc/hosts.deny >> $resultFile
+echo "******************查看主机禁用列表******************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+
+echo -e "file: /etc/security/limits.conf" >> $resultFile
+grep -v '^#' /etc/security/limits.conf >> $resultFile
+echo "*******************查看用户系统资源的分配信息************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:netstat -antu" >> $resultFile
+netstat -antu >> $resultFile
+echo "*****************查看端口信息**********************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:iptables -L" >> $resultFile
+iptables -L >> $resultFile
+echo "*****************查看防火墙规则*************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:iptables -L -t nat" >> $resultFile
+iptables -L -t nat >> $resultFile
+echo "*****************查看nat表**********************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:iptables -L -t nat" >> $resultFile
+iptables -L -t nat >> $resultFile
+echo "*****************查看arp防火墙nat表**********************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:ps -ef" >> $resultFile
+ps auef >> $resultFile
+echo "*****************查看系统运行状态**************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:top" >> $resultFile
+top -n 1 -b >> $resultFile 
+echo "*****************查看系统资源状态**************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:free -m" >> $resultFile
+free -m >> $resultFile
+echo "*****************查看内存信息**************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:df -h" >> $resultFile
+df -h >> $resultFile
+echo "******************查看硬盘使用率*************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo "command:file: /etc/fstab" >> $resultFile
+cat /etc/fstab >> $resultFile
+echo "******************查看磁盘配额*************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e "file: /var/log/messages*" >> $resultFile #查看messages的两个日志文件的头50行的信息
+head -n 50 `ls /var/log/messages* | head -2`>> $resultFile #查看messages的两个日志文件的头50行的信息
+echo "*************************************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e "command：ls /var/log/secure* | head -2" >> $resultFile 
+head -n 50 `ls /var/log/secure* | head -2` >> $resultFile #查看secure的两个日志文件的头50行的信息
+echo "*************************************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e "file: /var/log/audit/audit.log" >> $resultFile
+head -n 50 /var/log/audit/audit.log >> $resultFile #查看audit.log日志头50行的信息
+echo "*************************************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+echo -e "command:rpm -qi patch" >> $resultFile
+rpm -qi patch >> $resultFile #查看补丁信息
+echo "******************查看patch软件报详细信息*******************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
+
+
+echo -e "结束" >> $resultFile
+echo "******************结束*******************************" >> $resultFile
+echo -e "\n\n" >> $resultFile
